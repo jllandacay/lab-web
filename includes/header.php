@@ -1,0 +1,2 @@
+<?php require_once __DIR__.'/../config/db.php'; ?>
+<!doctype html><html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="csrf" content="<?=e(token())?>"><title><?=e($titulo ?? 'Laboratorio de Ingeniería Web')?></title><link rel="stylesheet" href="<?=BASE_URL?>/assets/css/estilos.css"><script defer src="<?=BASE_URL?>/assets/js/app.js"></script></head><body><?php include __DIR__.'/nav.php'; ?><main>

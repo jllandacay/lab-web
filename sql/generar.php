@@ -1,0 +1,13 @@
+<?php
+// Generador de desarrollo; el SQL resultante se importa directamente en phpMyAdmin.
+require __DIR__.'/../includes/contenido.php';
+function literal($v) { return "'".str_replace("'","''",$v)."'"; }
+$sql="CREATE DATABASE IF NOT EXISTS lab_web CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;\nUSE lab_web;\n";
+$sql.="CREATE TABLE IF NOT EXISTS alumnos (id INT AUTO_INCREMENT PRIMARY KEY,nombre VARCHAR(100) NOT NULL,email VARCHAR(190) NOT NULL UNIQUE,password VARCHAR(255) NOT NULL,rol ENUM('alumno','admin') NOT NULL DEFAULT 'alumno',fecha_registro TIMESTAMP DEFAULT CURRENT_TIMESTAMP);\n";
+$sql.="CREATE TABLE IF NOT EXISTS modulos (id INT PRIMARY KEY,titulo VARCHAR(150) NOT NULL,slug VARCHAR(100) NOT NULL,orden INT NOT NULL);\nCREATE TABLE IF NOT EXISTS preguntas (id INT PRIMARY KEY,modulo_id INT NOT NULL,enunciado TEXT NOT NULL,opciones JSON NOT NULL,respuesta_correcta INT NOT NULL,FOREIGN KEY(modulo_id) REFERENCES modulos(id));\nCREATE TABLE IF NOT EXISTS resultados (id INT AUTO_INCREMENT PRIMARY KEY,alumno_id INT NOT NULL,modulo_id INT NOT NULL,puntaje DECIMAL(4,2) NOT NULL,fecha TIMESTAMP DEFAULT CURRENT_TIMESTAMP,FOREIGN KEY(alumno_id) REFERENCES alumnos(id),FOREIGN KEY(modulo_id) REFERENCES modulos(id));\n";
+$sql.="CREATE TABLE IF NOT EXISTS tareas (id INT AUTO_INCREMENT PRIMARY KEY,alumno_id INT NOT NULL,titulo VARCHAR(150) NOT NULL,completada BOOLEAN NOT NULL DEFAULT 0,creada_en TIMESTAMP DEFAULT CURRENT_TIMESTAMP,FOREIGN KEY(alumno_id) REFERENCES alumnos(id));\nCREATE TABLE IF NOT EXISTS checklist_despliegue (id INT AUTO_INCREMENT PRIMARY KEY,alumno_id INT NOT NULL,item VARCHAR(150) NOT NULL,completado BOOLEAN NOT NULL DEFAULT 0,UNIQUE KEY alumno_item(alumno_id,item),FOREIGN KEY(alumno_id) REFERENCES alumnos(id));\n";
+foreach($contenidos as $id=>$c) $sql.='INSERT IGNORE INTO modulos VALUES ('.$id.','.literal($c[0]).','.literal($c[1]).','.$id.");\n";
+$id=1;foreach($preguntas_semilla as $mod=>$lista) foreach($lista as $p) $sql.='INSERT IGNORE INTO preguntas VALUES ('.$id++.','.$mod.','.literal($p[0]).','.literal(json_encode($p[1],JSON_UNESCAPED_UNICODE)).','.$p[2].");\n";
+foreach(['admin','alumno'] as $nombre) $sql.='INSERT IGNORE INTO alumnos(nombre,email,password,rol) VALUES ('.literal($nombre).','.literal($nombre.'@lab.local').','.literal(password_hash($nombre.'123',PASSWORD_DEFAULT)).','.literal($nombre==='admin'?'admin':'alumno').");\n";
+$sql.="INSERT INTO tareas(alumno_id,titulo) SELECT id,'Comparar el CRUD MPA y SPA' FROM alumnos WHERE email='alumno@lab.local' AND NOT EXISTS (SELECT 1 FROM tareas);\n";
+file_put_contents(__DIR__.'/lab_web.sql',$sql);

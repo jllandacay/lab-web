@@ -1,0 +1,4 @@
+<!doctype html><html lang="es"><meta charset="utf-8"><title>JavaScript y fetch</title><h1>Hola, clase</h1><p id="mensaje">Consultando la API…</p><script>
+// JavaScript corre en el navegador; PHP produce el JSON en el servidor.
+fetch('../../api/saludo.php').then(respuesta=>{if(!respuesta.ok)throw new Error('Error HTTP');return respuesta.json();}).then(datos=>{document.querySelector('#mensaje').textContent=datos.mensaje+' · '+datos.hora;}).catch(error=>{document.querySelector('#mensaje').textContent=error.message;});
+</script></html>

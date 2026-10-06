@@ -1,0 +1,1 @@
+<?php require __DIR__.'/config/config.php';if($_SERVER['REQUEST_METHOD']!=='POST'){http_response_code(405);exit;}try{csrf();}catch(Throwable $error){http_response_code(403);exit('Token inválido');}$_SESSION=[];session_destroy();header('Location: '.BASE_URL.'/login.php');
