@@ -6,6 +6,10 @@ Aplicación educativa para XAMPP: PHP 8.x puro, HTML, CSS, JavaScript y MySQL/Ma
 
 Lee [Guía del código](documentacion/GUIA_DEL_CODIGO.md): un único documento con las capas de la aplicación, el orden de ejecución, los recorridos de datos, explicación por bloques y código completo de cada archivo.
 
+## Descargar el proyecto como alumno
+
+Sigue la [Guía para descargar el proyecto con Git](documentacion/GUIA_DESCARGA_GIT.md) para instalar Git y XAMPP, clonar el repositorio, importar la base de datos y ejecutar el laboratorio en tu computadora.
+
 ## Instalación
 
 1. Instala XAMPP en `C:\xampp`.
